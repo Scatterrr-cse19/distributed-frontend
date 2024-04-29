@@ -1,3 +1,4 @@
+import DropZone from '@/components/DropZone'
 import FileList from '@/components/FileList'
 import UploadFile from '@/components/UploadFile'
 
@@ -9,7 +10,8 @@ export default function Home() {
       </span>
       
       <div className="flex justify-center m-12">
-        <UploadFile />
+        {/* <UploadFile /> */}
+        <DropZone />
       </div>
 
       <div className="flex justify-center m-12">
