@@ -16,7 +16,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        {/* Add a navbar */}
+        <nav className="bg-black p-4 text-white flex justify-between items-center fixed top-0 w-full z-10">
+          <span className="text-xl font-bold">Scatterrr: Distributed File Storage</span>
+
+          {/* Add a search button */}
+          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Search
+          </button>
+        </nav>
+        {children}
+      </body>
     </html>
   );
 }
