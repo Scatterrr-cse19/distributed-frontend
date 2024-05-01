@@ -93,3 +93,12 @@ export const sampleFileMetadata : FileMetadata[] = [
     name: 'sample5.pdf'
   }
 ];
+
+export const searchedFileMetadata : FileMetadata[] = [
+  // select random files from sampleFileMetadata
+  sampleFileMetadata[0],
+  sampleFileMetadata[5],
+  sampleFileMetadata[6],
+  sampleFileMetadata[9],
+  ...sampleFileMetadata.slice(1, 15)
+]

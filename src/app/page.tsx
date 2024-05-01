@@ -5,11 +5,11 @@ import FileList from '@/components/FileList'
 import { FileMetadata } from '@/types';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { sampleFileMetadata } from '@/data';
-import SearchBar from '@/components/SearchBar';
+import { sampleFileMetadata, searchedFileMetadata } from '@/data';
 
 export default function Home() {
   const [files, setFiles] = useState<FileMetadata[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     async function fetchFiles() {
@@ -42,6 +42,24 @@ export default function Home() {
     }
   }
 
+  const handleSearch = () => {
+    console.log('Searching for:', searchQuery);
+    // Call the search API
+
+    // Update the files state with the search results
+    setFiles(searchedFileMetadata);
+
+    // Scroll to the FileList section
+    const fileList = document.getElementById('filelist');
+    if (fileList) {
+      window.scrollTo({ top: fileList.offsetTop, behavior: 'smooth' });
+    }
+
+    // Clear the search input
+    setSearchQuery('');
+    
+  }
+
   return (
     <>
       <nav className="bg-black p-4 text-white flex justify-between items-center fixed top-0 w-full z-10">
@@ -54,8 +72,24 @@ export default function Home() {
           >
             Upload
           </button>
+          {/*input for search */}
+          <input type="text" placeholder="Search for files..." 
+            className={`p-2 border-2 border-gray-300 rounded-md w-96 text-black`} 
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyPress={(e) => {
+              if (e.key === 'Enter') {
+                handleSearch();
+              }
+            }
+            }
+          />
           {/* Add a search button */}
-          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => {
+                handleSearch();
+            }
+          }
+          >
             Search
           </button>
         </div>
@@ -67,7 +101,7 @@ export default function Home() {
         </div>
 
         <div className="m-12">
-          <span className="text-xl font-bold">
+          <span className="text-xl font-bold" id="filelist">
             Your Files
           </span>
           <div className="flex justify-center">
