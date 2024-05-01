@@ -34,10 +34,35 @@ export default function Home() {
     setFiles(sampleFileMetadata);
   }, []);
 
+  const scrollToDropZone = () => {
+    console.log('Scrolling to DropZone');
+    const dropZone = document.getElementById('dropzone');
+    if (dropZone) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
   return (
     <>
-      <main className="p-24">
-        <div className="flex justify-center m-12">
+      <nav className="bg-black p-4 text-white flex justify-between items-center fixed top-0 w-full z-10">
+        <span className="text-xl font-bold">Scatterrr: Distributed File Storage</span>
+
+        <div className="space-x-4">
+          {/* Add upload button that directs to the DropZone section in the page */}
+          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={scrollToDropZone}
+          >
+            Upload
+          </button>
+          {/* Add a search button */}
+          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Search
+          </button>
+        </div>
+      </nav>
+
+      <main className="p-24 mt-4">
+        <div className="flex justify-center m-12" id="dropzone">
           <DropZone />
         </div>
 
