@@ -32,8 +32,7 @@ export default function FileList({ files }: { files: FileMetadata[] }) {
     setShowModal(false);
     if (allowTampered) {
       console.log('Download the tampered file');
-      // TODO: Set the allowTampered flag to true in the request
-      axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/server/retrieve?fileName=${fileName}`)
+      axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/server/retrieve?fileName=${fileName}&allowTampered=true`)
       .then((response) => {
         handleDownloadedContent(response.data, fileName);
       })
