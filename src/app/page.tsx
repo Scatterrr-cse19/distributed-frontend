@@ -6,32 +6,32 @@ import { FileMetadata } from '@/types';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { sampleFileMetadata, searchedFileMetadata } from '@/data';
+import { ExtFile } from '@files-ui/react';
 
 export default function Home() {
   const [files, setFiles] = useState<FileMetadata[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    async function fetchFiles() {
-      try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/server/files`);
-        console.log('Files fetched:', response.data);
-        // Convert the response data to the FileMetadata type
-        const convertedFiles = response.data.map((file: any, index: number) => {
-          return {
-            id: index.toString(),
-            size: file.fileSize,
-            type: file.fileType,
-            name: file.fileName
-          };
-        });
-        setFiles(convertedFiles);
-      } catch (error) {
-        console.error('Files fetch failed:', error);
-      }
+  async function fetchFiles() {
+    try {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/server/files`);
+      console.log('Files fetched:', response.data);
+      // Convert the response data to the FileMetadata type
+      const convertedFiles = response.data.map((file: any, index: number) => {
+        return {
+          id: index.toString(),
+          size: file.fileSize,
+          type: file.fileType,
+          name: file.fileName
+        };
+      });
+      setFiles(convertedFiles);
+    } catch (error) {
+      console.error('Files fetch failed:', error);
     }
-    // TODO: Call the fetchFiles function
-    // fetchFiles();
+  }
+    fetchFiles();
     setFiles(sampleFileMetadata);
   }, []);
 
@@ -58,7 +58,18 @@ export default function Home() {
 
     // Clear the search input
     setSearchQuery('');
-    
+
+  }
+
+  const appendUploadedFile = (file: ExtFile) => {
+    console.log('Appending uploaded file:', file);
+    const newFile: FileMetadata = {
+      id: (files.length + 1).toString(),
+      name: file.name!,
+      size: file.size!,
+      type: file.type!
+    };
+    setFiles([...files, newFile]);
   }
 
   return (
@@ -74,8 +85,8 @@ export default function Home() {
             Upload
           </button>
           {/*input for search */}
-          <input type="text" placeholder="Search for files..." 
-            className={`p-2 border-2 border-gray-300 rounded-md w-96 text-black`} 
+          <input type="text" placeholder="Search for files..."
+            className={`p-2 border-2 border-gray-300 rounded-md w-96 text-black`}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyPress={(e) => {
               if (e.key === 'Enter') {
@@ -87,9 +98,9 @@ export default function Home() {
           {/* Add a search button */}
           <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             onClick={() => {
-                handleSearch();
+              handleSearch();
             }
-          }
+            }
           >
             Search
           </button>
@@ -98,7 +109,7 @@ export default function Home() {
 
       <main className="p-24 mt-4">
         <div className="flex justify-center m-12" id="dropzone">
-          <DropZone />
+          <DropZone appendUploadedFile={appendUploadedFile} />
         </div>
 
         <div className="m-12">

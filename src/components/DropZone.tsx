@@ -5,7 +5,7 @@ import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
-export default function DropZone() {
+export default function DropZone({appendUploadedFile}: {appendUploadedFile: (file:ExtFile) => void}) {
   const [files, setFiles] = useState<ExtFile[]>([]);
 
   const updateFiles = (newFiles:ExtFile[]) => {
@@ -14,6 +14,7 @@ export default function DropZone() {
 
   const handleFinishUpload = (files:ExtFile[]) => {
     console.log("File uploaded", files);
+    appendUploadedFile(files[0]);
     setFiles([]);
     toast.success("File uploaded successfully");
   };
