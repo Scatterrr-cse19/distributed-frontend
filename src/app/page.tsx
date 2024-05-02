@@ -30,6 +30,7 @@ export default function Home() {
         console.error('Files fetch failed:', error);
       }
     }
+    // TODO: Call the fetchFiles function
     // fetchFiles();
     setFiles(sampleFileMetadata);
   }, []);
@@ -44,9 +45,9 @@ export default function Home() {
 
   const handleSearch = () => {
     console.log('Searching for:', searchQuery);
-    // Call the search API
+    // TODO: Call the search API
 
-    // Update the files state with the search results
+    // TODO: Update the files state with the search results
     setFiles(searchedFileMetadata);
 
     // Scroll to the FileList section
