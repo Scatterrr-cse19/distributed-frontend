@@ -28,35 +28,38 @@ export default function FileList({ files }: { files: FileMetadata[] }) {
     setDownloadingFileName('');
   }
 
-  const handleTamperedDownload = (allowTampered: boolean, fileName: string) => {
+  const handleTamperedDownload = async (allowTampered: boolean, fileName: string) => {
     setShowModal(false);
     if (allowTampered) {
       console.log('Download the tampered file');
-      axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/server/retrieve?fileName=${fileName}&allowTampered=true`)
-      .then((response) => {
-        handleDownloadedContent(response.data, fileName);
+      const response = await axios({
+        responseType: 'blob',
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/server/retrieve?fileName=${fileName}&allowTampered=true`,
       })
+      handleDownloadedContent(response.data, fileName);
     } else {
       console.log('Do not download the file');
     }
     setDownloadingFileName('');
   }
 
-  const handleDownload = (fileName: string) => {
+  const handleDownload = async (fileName: string) => {
     console.log("Download file", fileName);
     setDownloadingFileName(fileName);
-    axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/server/retrieve?fileName=${fileName}`)
-    .then((response) => {
-      // check status code, if status code is no_content, then content has been tampered with
-      if (response.status === 204) {
-        handleTamperedContent(fileName);
-      } 
-     // if status code is 200, then content is authentic, download the file 
-      else {
-        console.log('File is authentic');
-        handleDownloadedContent(response.data, fileName);
-      }
+    const response = await axios({
+      responseType: 'blob',
+      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/server/retrieve?fileName=${fileName}`,
     })
+    // check status code, if status code is no_content, then content has been tampered with
+    if (response.status === 204) {
+      handleTamperedContent(fileName);
+      return;
+    }
+    // if status code is 200, then content is authentic, download the file 
+    else {
+      console.log('File is authentic');
+      handleDownloadedContent(response.data, fileName);
+    }
   };
 
   const handleDelete = (fileName: string) => {
