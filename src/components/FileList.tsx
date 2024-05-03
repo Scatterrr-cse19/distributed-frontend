@@ -72,8 +72,15 @@ export default function FileList({ files }: { files: FileMetadata[] }) {
     }
   };
 
-  const handleDelete = (fileName: string) => {
+  const handleDelete = async (fileName: string) => {
     console.log("Delete file", fileName);
+    const response = await axios({
+      method: 'delete',
+      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/server/delete?fileName=${fileName}`,
+    })
+    if (response.status === 200) {
+      console.log('File deleted successfully');
+    }
   };
 
   return (
