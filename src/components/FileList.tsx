@@ -5,6 +5,7 @@ import { FileCard } from '@files-ui/react';
 import axios from 'axios';
 import { FileMetadata } from '@/types';
 import TamperedModal from './TamperedModal';
+import { toast, ToastContainer } from 'react-toastify';
 
 export default function FileList({ files }: { files: FileMetadata[] }) {
   const [showModal, setShowModal] = React.useState(false);
@@ -36,7 +37,16 @@ export default function FileList({ files }: { files: FileMetadata[] }) {
         responseType: 'blob',
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/server/retrieve?fileName=${fileName}&allowTampered=true`,
       })
-      handleDownloadedContent(response.data, fileName);
+      // check status code, if status code is no_content, then content was not able to be retrieved at the server
+      if (response.status === 204) {
+        console.log('No content found');
+        toast.error('Download failed. File is corrupted.');
+        return;
+      }
+      // if status code is 200, then content is available even if tampered, download the file
+      else {
+        handleDownloadedContent(response.data, fileName);
+      }
     } else {
       console.log('Do not download the file');
     }
@@ -68,6 +78,7 @@ export default function FileList({ files }: { files: FileMetadata[] }) {
 
   return (
     <>
+    <ToastContainer />
     <div className="flex flex-wrap mt-4 align-left justify-left">
       {files.map((file) => (
         <div className="mr-12 m-4" key={file.id}>
